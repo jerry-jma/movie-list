@@ -15,16 +15,21 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      movies: this.props.movies
+      movies: this.props.movies,
+      userAddedMovies: []
     }
-    this.submitSearch = this.submitSearch.bind(this)
+    this.submitSearch = this.submitSearch.bind(this);
+    this.addMovie = this.addMovie.bind(this);
   }
 
   submitSearch(searchInput) {
     var filteredList = [];
     var originalMoiveList = this.props.movies;
+    searchInput = searchInput.toLowerCase();
+
     originalMoiveList.forEach(currentMovie => {
-      if (currentMovie.title === searchInput) {
+      var title = currentMovie.title.toLowerCase();
+      if (title === searchInput) {
         filteredList.push(currentMovie);
       }
     })
@@ -37,10 +42,19 @@ class App extends React.Component {
     })
   }
 
+  addMovie(movieTitle) {
+    var addedMovie = {title: movieTitle};
+    var userAddedMovies = [...this.state.userAddedMovies, addedMovie]
+    this.setState({
+      userAddedMovies: userAddedMovies,
+      movies: userAddedMovies
+    })
+  }
+
   render() {
     return (
       <div>
-        <AddMovie />
+        <AddMovie addMovie={this.addMovie}/>
         <SearchMovie submitSearch={this.submitSearch}/>
         <MovieList movieList={this.state.movies} />
       </div>
